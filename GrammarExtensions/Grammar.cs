@@ -63,7 +63,7 @@ namespace GrammarExtensions
         }
 
 
-        // NOTE: uh... Microsoft has a perfectly good wheel in System.Data.Entity.Design.PluralizationServices
+        // NOTE: Spent a couple hours on this, then realized Microsoft has a perfectly good wheel in System.Data.Entity.Design.PluralizationServices
         // LINK: https://docs.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?redirectedfrom=MSDN&view=netframework-4.7.2
         // See implementation here:
         // https://github.com/Microsoft/referencesource/blob/3b1eaf5203992df69de44c783a3eda37d3d4cd10/System.Data.Entity.Design/System/Data/Entity/Design/PluralizationService/EnglishPluralizationService.cs
@@ -81,13 +81,11 @@ namespace GrammarExtensions
                 return noun;
             }
 
-            //string[] noChange = { "fish", "sheep", "deer" };
-            //string[] uninflectiveSuffixList = { "ois", "pos", "itis", "ism" };
-
-            //if (noChange.Contains(noun))
-            //{
-            //    return noun;
-            //}
+            string latin = TryLatinateEndings(noun);
+            if (latin != null)
+            {
+                return latin;
+            }
 
             char lastLetter = noun.Reverse().Take(1).ToArray()[0];
 
@@ -96,17 +94,10 @@ namespace GrammarExtensions
             {
                 return ReplaceEnd(noun, 1, "ies");
             }
-
-            string latin = TryLatinateEndings(noun);
-            if (latin != null)
-            {
-                return latin;
-            }
-
+            
             //If the noun ends with -ch, -s, -sh, -x, or -z, add "es"
             if (lastLetter == 'o' || lastLetter == 's' || lastLetter == 'x' || lastLetter == 'z'
                 || noun.EndsWith("ch") || noun.EndsWith("sh"))
-                //|| (lastLetter == 's' && !noun.EndsWith("us")))     // Don't count Latin endings with -us
             {
                 return noun + "es";
             }
@@ -135,6 +126,20 @@ namespace GrammarExtensions
             return noun + "s";
         }
 
+        public static string ToSingular(this string noun)
+        {
+            //  Singularizing RegEx:        /(?<![aei])([ie][d])(?=[^a-zA-Z])|(?<=[ertkgwmnl])s(?=[^a-zA-Z])/g
+            throw new NotImplementedException("This is nowhere near complete");
+
+            return ReplaceEnd(noun, 1, "");
+        }
+
+        public static string ReplaceEnd(string input, int numberOfChars, string ending)
+        {
+            return input.Substring(0, input.Length - numberOfChars) + ending;
+        }
+
+        
         private static string TryLatinateEndings(string noun)
         {
             if (noun.EndsWith("ex") || noun.EndsWith("ix"))
@@ -157,20 +162,6 @@ namespace GrammarExtensions
             }
 
             return null;
-        }
-
-        public static string ToSingular(this string noun)
-        {
-            //  Singularizing RegEx:        /(?<![aei])([ie][d])(?=[^a-zA-Z])|(?<=[ertkgwmnl])s(?=[^a-zA-Z])/g
-            throw new NotImplementedException("This is nowhere near complete");
-
-            return ReplaceEnd(noun, 1, "");
-        }
-
-
-        public static string ReplaceEnd(string input, int numberOfChars, string ending)
-        {
-            return input.Substring(0, input.Length - numberOfChars) + ending;
         }
     }
 }
