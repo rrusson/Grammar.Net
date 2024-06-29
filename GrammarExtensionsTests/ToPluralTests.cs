@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data.Entity.Design.PluralizationServices;
-using System.Globalization;
+﻿using System.Globalization;
 using GrammarExtensions;
 
 namespace GrammarExtensionsTests
@@ -8,41 +6,35 @@ namespace GrammarExtensionsTests
     [TestClass]
     public class ToPluralTests
     {
-        [TestMethod()]
         public void Leave_it_to_the_professionals_test()
         {
-            var x = PluralizationService.CreateService(CultureInfo.CurrentCulture);
-            string mice = x.Pluralize("mouse");
-            string potatoes = x.Pluralize("potato");
-            Assert.AreEqual("mice", mice);
-            Assert.AreEqual("potatoes", potatoes);
+			// The Humanizer library does this really well. Just use that.
         }
         
-        [TestMethod()]
+        [TestMethod]
         public void ToPlural_ConsonantEnding()
         {
-            Assert.AreEqual("Tests", "Test".ToPlural());
-
-            var x = PluralizationService.CreateService(CultureInfo.CurrentCulture);
-            string mice = x.Pluralize("mouse");
-            Assert.AreEqual("mice", mice);
+			Assert.AreEqual("Tests", "Test".ToPlural());
+			Assert.AreEqual("tests", "test".ToPlural());
+			//Assert.AreEqual("mice", "mouse".ToPlural());  //TODO: Handle this case
+			Assert.AreEqual("potatoes", "potato".ToPlural());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ToPlural_Greek()
         {
             Assert.AreEqual("Criteria", "Criterion".ToPlural());
             Assert.AreEqual("phenomena", "phenomenon".ToPlural());
         }
 
-        //[TestMethod()]
+        //[TestMethod]
         //public void ToPlural_Italian()
         //{
         //    Assert.AreEqual("virtuoso", "virtuosi".ToPlural());
         //    Assert.AreEqual("virtuoso", "virtuosos".ToPlural());        //or this?
         //}
 
-        [TestMethod()]
+        [TestMethod]
         public void ToPlural_Latin()
         {
             Assert.AreEqual("Alumnae", "Alumna".ToPlural());
@@ -53,20 +45,13 @@ namespace GrammarExtensionsTests
             Assert.AreEqual("stimuli", "stimulus".ToPlural());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ToPlural_OddsAndEnds()
         {
             Assert.AreEqual("Lunches", "Lunch".ToPlural());
             Assert.AreEqual("foxes", "fox".ToPlural());
             Assert.AreEqual("heroes", "hero".ToPlural());
             Assert.AreEqual("Torpedoes", "Torpedo".ToPlural());
-        }
-
-        [TestMethod()]
-        public void ReplaceEnd_Test()
-        {
-            string testString = "testString";
-            Assert.AreEqual("testStrTEST", Grammar.ReplaceEnd(testString, 3, "TEST"));
         }
     }
 }

@@ -1,18 +1,16 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace GrammarExtensions
 {
-    public static class Grammar
+	public static class Grammar
     {
         /// <summary>
         /// Returns "a" or "an" based on grammatical rules
         /// </summary>
         /// <param name="noun">object of the article</param>
-        /// <returns>"a" or "an"</returns>
-        public static string IndefiniteArticle(this string noun)
+        /// <returns>"a" or "an"-- empty if input was empty</returns>
+        public static string IndefiniteArticle(this string? noun)
         {
             if (string.IsNullOrWhiteSpace(noun))
             {
@@ -21,14 +19,14 @@ namespace GrammarExtensions
 
             //Acronyms starting with a vowel sound (with or without periods between letters)
             if (noun.Length > 1 && (noun[1] == '.' || noun == noun.ToUpper())
-                && "AEFHILMNORSX".Contains(noun[0].ToString().ToUpper()))
+                && "AEFHILMNORSX".Contains(noun[0].ToString(), StringComparison.CurrentCultureIgnoreCase))
             {
                 return "an";
             }
 
             //Acronyms starting with a U sound (with or without periods between letters)
             if (noun.Length > 1 && (noun[1] == '.' || noun == noun.ToUpper())
-                && noun[0].ToString().ToUpper() == "U")
+                && noun[0].ToString().Equals("U", StringComparison.CurrentCultureIgnoreCase))
             {
                 return "a";
             }
@@ -62,13 +60,11 @@ namespace GrammarExtensions
                 : "a";
         }
 
+		// NOTE: Spent a couple hours on this, then realized Microsoft has a perfectly good wheel in System.Data.Entity.Design.PluralizationServices
+		// https://learn.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?view=netframework-4.8.1
+		// And the Humanizer library has these methods and much more: https://github.com/Humanizr/Humanizer
 
-        // NOTE: Spent a couple hours on this, then realized Microsoft has a perfectly good wheel in System.Data.Entity.Design.PluralizationServices
-        // LINK: https://docs.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?redirectedfrom=MSDN&view=netframework-4.7.2
-        // See implementation here:
-        // https://github.com/Microsoft/referencesource/blob/3b1eaf5203992df69de44c783a3eda37d3d4cd10/System.Data.Entity.Design/System/Data/Entity/Design/PluralizationService/EnglishPluralizationService.cs
-
-        public static string ToPlural(this string noun)
+		public static string ToPlural(this string noun)
         {
             if (string.IsNullOrWhiteSpace(noun))
             {
@@ -78,10 +74,10 @@ namespace GrammarExtensions
             string[] alreadyPluralEndings = { "deer", "fish", "itis", "ois", "pos", "sheep" };
             if (alreadyPluralEndings.Any(w => noun.EndsWith(w)))
             {
-                return noun;
-            }
+                return noun ?? string.Empty;
+			}
 
-            string latin = TryLatinateEndings(noun);
+            string? latin = TryLatinateEndings(noun);
             if (latin != null)
             {
                 return latin;
@@ -92,7 +88,7 @@ namespace GrammarExtensions
             //Vowel endings
             if (lastLetter == 'y')
             {
-                return ReplaceEnd(noun, 1, "ies");
+                return ReplaceEnding(noun, 1, "ies");
             }
             
             //If the noun ends with -ch, -s, -sh, -x, or -z, add "es"
@@ -105,22 +101,22 @@ namespace GrammarExtensions
             //If the noun ends with -f or -fe, change to "ves" (e.g. knife --> knives)
             if (lastLetter == 'f')
             {
-                return ReplaceEnd(noun, 1, "ves");
+                return ReplaceEnding(noun, 1, "ves");
             }
             if (noun.EndsWith("fe"))
             {
-                return ReplaceEnd(noun, 2, "ves");
+                return ReplaceEnding(noun, 2, "ves");
             }
 
             //Greek words
             if (noun.EndsWith("sis"))   // e.g. hypothesis --> hypotheses
             {
-                return ReplaceEnd(noun, 2, "es");
+                return ReplaceEnding(noun, 2, "es");
             }
 
             if (noun.EndsWith("ion") || noun.EndsWith("non"))   // e.g. criterion --> Criteria
             {
-                return ReplaceEnd(noun, 2, "a");
+                return ReplaceEnding(noun, 2, "a");
             }
 
             return noun + "s";
@@ -131,37 +127,43 @@ namespace GrammarExtensions
             //  Singularizing RegEx:        /(?<![aei])([ie][d])(?=[^a-zA-Z])|(?<=[ertkgwmnl])s(?=[^a-zA-Z])/g
             throw new NotImplementedException("This is nowhere near complete");
 
-            return ReplaceEnd(noun, 1, "");
+            //return ReplaceEnd(noun, 1, "");
         }
 
-        public static string ReplaceEnd(string input, int numberOfChars, string ending)
+		private static string? TryLatinateEndings(string noun)
+		{
+			if (noun.EndsWith("ex") || noun.EndsWith("ix"))
+			{
+				return ReplaceEnding(noun, 2, "ices");
+			}
+
+			if (noun.EndsWith("um"))    //e.g. memorandum --> memoranda
+			{
+				return ReplaceEnding(noun, 2, "a");
+			}
+			if (noun.EndsWith("us"))    //e.g. radius --> radii
+			{
+				return ReplaceEnding(noun, 2, "i");
+			}
+
+			if (noun.EndsWith("a"))
+			{
+				return noun + "e";
+			}
+
+			return null;
+		}
+
+		private static string ReplaceEnding(string input, int numberOfChars, string ending)
         {
-            return input.Substring(0, input.Length - numberOfChars) + ending;
-        }
-
-        
-        private static string TryLatinateEndings(string noun)
-        {
-            if (noun.EndsWith("ex") || noun.EndsWith("ix"))
+            if (string.IsNullOrWhiteSpace(ending))
             {
-                return ReplaceEnd(noun, 2, "ices");
+                return input ?? string.Empty;
             }
 
-            if (noun.EndsWith("um"))    //e.g. memorandum --> memoranda
-            {
-                return ReplaceEnd(noun, 2, "a");
-            }
-            if (noun.EndsWith("us"))    //e.g. radius --> radii
-            {
-                return ReplaceEnd(noun, 2, "i");
-            }
-
-            if (noun.EndsWith("a"))
-            {
-                return noun + "e";
-            }
-
-            return null;
+            return string.IsNullOrWhiteSpace(input)
+                ? ending
+				: string.Concat(input.AsSpan(0, input.Length - numberOfChars), ending);
         }
     }
 }
