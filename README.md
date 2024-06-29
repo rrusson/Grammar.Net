@@ -1,5 +1,5 @@
 # Grammar.Net
-Various Grammar Functions as String Extensions
+String Extensions for Various Grammar Functions
 
 It's only a start, but I'm looking to put various grammatical helpers here in C#
 
@@ -7,8 +7,7 @@ Currently only handles indefinite articles, mainly based on ideas from @rigoneri
 https://github.com/rigoneri/indefinite-article.js
 https://github.com/rossmeissl/indefinite_article
 
-
-Working on pluralization and singularization, but it seems that Microsoft already has a great implementation of those in System.Data.Entity.Design.PluralizationServices
-SEE: https://docs.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?redirectedfrom=MSDN&view=netframework-4.7.2
+Added work on pluralization and singularization, but it appears Microsoft's System.Data.Entity.Design.PluralizationServices and Humanizer are excellent at that.
+Recommend using https://github.com/Humanizr/Humanizer
 
 # Any ideas welcome!
