@@ -9,8 +9,8 @@ namespace GrammarExtensions
 		// And the Humanizer library has these methods and much more: https://github.com/Humanizr/Humanizer
 
 		private static readonly string[] _samePluralEndings = { 
-			"bison", "craft", "deer", "faux pas", "fish", "itis", "moose", "offspring", "ois", 
-			"pants", "pos", "salmon", "scissors", "series", "sheep", "shrimp", "species", "swine", "trout", "tuna", "tweezers"
+			"bison", "craft", "deer", "faux pas", "fish", "itis", "moose", "offspring", "ois", "pants",
+			"salmon", "scissors", "series", "sheep", "shrimp", "species", "swine", "trout", "tuna", "tweezers"
 		};
 
 		private static readonly ImmutableDictionary<string, string> _specialCases =
@@ -114,6 +114,12 @@ namespace GrammarExtensions
 				return noun + "e";
 			}
 
+			// French words
+			if (noun.EndsWith("eau") || noun.EndsWith("eu") || noun.EndsWith("ou"))
+			{
+				return noun + "x"; // e.g. tableau --> tableaux
+			}
+
 			// Greek words
 			if (noun.EndsWith("is"))   //e.g. hypothesis --> hypotheses
 			{
@@ -125,16 +131,15 @@ namespace GrammarExtensions
 				return ReplaceEnding(noun, 2, "a");
 			}
 
-			// French words
-			if (noun.EndsWith("eau") || noun.EndsWith("eu") || noun.EndsWith("ou"))
-			{
-				return noun + "x"; // e.g. tableau --> tableaux
-			}
-
 			// Italian words
 			if (noun.EndsWith("tto")) // e.g. virtuoso --> virtuosos
 			{
 				return noun + "s"; // Let's use the English pluralization for these instead of proper Italian pluralization
+			}
+
+			if (noun.EndsWith("po")) // e.g. tempo --> tempos
+			{
+				return noun + "s";
 			}
 
 			return null;

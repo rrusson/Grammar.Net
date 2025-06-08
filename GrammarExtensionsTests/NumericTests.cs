@@ -3,7 +3,7 @@ using GrammarExtensions;
 namespace GrammarExtensionsTests
 {
 	[TestClass]
-	public class NumericExtensionTests
+	public class NumericTests
 	{
 		[DataTestMethod]
 		[DataRow(1, "1st")]
