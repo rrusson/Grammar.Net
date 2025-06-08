@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using GrammarExtensions;
+﻿using GrammarExtensions;
 
 namespace GrammarExtensionsTests
 {
@@ -26,13 +25,6 @@ namespace GrammarExtensionsTests
             Assert.AreEqual("Criteria", "Criterion".ToPlural());
             Assert.AreEqual("phenomena", "phenomenon".ToPlural());
         }
-
-        //[TestMethod]
-        //public void ToPlural_Italian()
-        //{
-        //    Assert.AreEqual("virtuoso", "virtuosi".ToPlural());
-        //    Assert.AreEqual("virtuoso", "virtuosos".ToPlural());        //or this?
-        //}
 
         [TestMethod]
         public void ToPlural_Latin()

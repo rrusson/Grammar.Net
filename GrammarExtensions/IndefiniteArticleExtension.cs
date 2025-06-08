@@ -7,12 +7,12 @@ namespace GrammarExtensions
 {
     public static class IndefiniteArticleExtension
     {
-        /// <summary>
-        /// Returns "a" or "an" based on grammatical rules
-        /// </summary>
-        /// <param name="noun">object of the article</param>
-        /// <returns>"a" or "an"</returns>
-        public static string IndefiniteArticle(this string noun)
+		/// <summary>
+		/// Returns "a" or "an" based on grammatical rules
+		/// </summary>
+		/// <param name="noun">object of the article</param>
+		/// <returns>"a" or "an"-- empty if input was empty</returns>
+		public static string IndefiniteArticle(this string noun)
         {
             if (string.IsNullOrWhiteSpace(noun))
             {

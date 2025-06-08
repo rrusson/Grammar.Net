@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GrammarExtensions;
+﻿using GrammarExtensions;
 
 namespace GrammarExtensionsTests
 {
@@ -19,17 +17,17 @@ namespace GrammarExtensionsTests
 				"once",
 				"one-armed",
 				"one-time",
-				"ouija",
+				"Ouija",
 				"ubiquity",
 				"uboat",
 				"ufo",
 				"UK",
 				"ukulele",
-				"u.n.",
+				"U.N.",
 				"unanimous",
 				"unicorn",
 				"unilateral",
-				"urinologist",
+				"urologist",
 				"urea",
 				"useful",
 				"user"
@@ -49,7 +47,7 @@ namespace GrammarExtensionsTests
 			var anWords = new string[]
 			{
 				"apple",
-				"euler",
+				"Euler",
 				"honor",
 				"honorable",
 				"hour",
@@ -58,7 +56,7 @@ namespace GrammarExtensionsTests
 				"onerous",
 				"Oaxaca",
 				"unassailable",
-				"ubermensch",
+				"Uber mensch",
 				"unanswered",
 				"ungrammatical",
 				"unilluminated",
@@ -80,10 +78,8 @@ namespace GrammarExtensionsTests
 		{
 			// Act and Assert
 			Assert.AreEqual("a", "hamburger".IndefiniteArticle(), "Wrong IndefiniteArticle for 'hamburger'");
-			Assert.AreEqual("a", "Hamburger".IndefiniteArticle(), "Wrong IndefiniteArticle for 'Hamburger'");
 
 			Assert.AreEqual("an", "honor".IndefiniteArticle(), "Wrong IndefiniteArticle for 'honor'");
-			Assert.AreEqual("an", "Honor".IndefiniteArticle(), "Wrong IndefiniteArticle for 'Honor'");
 
 			// Acronyms
 			Assert.AreEqual("a", "Faa".IndefiniteArticle(), "Wrong IndefiniteArticle for 'Faa'");

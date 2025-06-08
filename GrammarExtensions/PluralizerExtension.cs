@@ -8,9 +8,8 @@ namespace GrammarExtensions
 	public static class PluralizerExtension
 	{
 		// NOTE: Spent a couple hours on this, then realized Microsoft has a perfectly good wheel in System.Data.Entity.Design.PluralizationServices
-		// LINK: https://docs.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?redirectedfrom=MSDN&view=netframework-4.7.2
-		// See implementation here:
-		// https://github.com/Microsoft/referencesource/blob/3b1eaf5203992df69de44c783a3eda37d3d4cd10/System.Data.Entity.Design/System/Data/Entity/Design/PluralizationService/EnglishPluralizationService.cs
+		// https://learn.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?view=netframework-4.8.1
+		// And the Humanizer library has these methods and much more: https://github.com/Humanizr/Humanizer
 
 		public static string ToPlural(this string noun)
 		{
