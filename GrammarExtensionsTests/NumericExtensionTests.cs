@@ -46,6 +46,27 @@ namespace GrammarExtensionsTests
 		{
 			var result = input.ToWords();
 			Assert.AreEqual(expected, result);
+		 }
+
+		[DataTestMethod]
+		[DataRow(1, "first")]
+		[DataRow(2, "second")]
+		[DataRow(3, "third")]
+		[DataRow(4, "fourth")]
+		[DataRow(11, "eleventh")]
+		[DataRow(12, "twelfth")]
+		[DataRow(13, "thirteenth")]
+		[DataRow(21, "twenty-first")]
+		[DataRow(100, "one hundredth")]
+		[DataRow(101, "one hundred first")]
+		[DataRow(999, "nine hundred ninety-ninth")]
+		[DataRow(1000, "one thousandth")]
+		[DataRow(3001, "three thousand first")]
+		[DataRow(15011, "fifteen thousand eleventh")]
+		public void ToWordsOrdinal_Test(long input, string expected)
+		{
+			var result = input.ToWordsOrdinal();
+			Assert.AreEqual(expected, result);
 		}
 	}
 }
