@@ -51,8 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IndefiniteArticleTests.cs" />
+    <Compile Include="NumericExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToPluralTests.cs" />
+    <Compile Include="PluralizerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

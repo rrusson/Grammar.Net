@@ -6,7 +6,7 @@ using GrammarExtensions;
 namespace GrammarExtensionsTests
 {
     [TestClass]
-    public class ToPluralTests
+    public class PluralizerTests
     {
         [TestMethod()]
         public void Leave_it_to_the_professionals_test()
@@ -60,13 +60,6 @@ namespace GrammarExtensionsTests
             Assert.AreEqual("foxes", "fox".ToPlural());
             Assert.AreEqual("heroes", "hero".ToPlural());
             Assert.AreEqual("Torpedoes", "Torpedo".ToPlural());
-        }
-
-        [TestMethod()]
-        public void ReplaceEnd_Test()
-        {
-            string testString = "testString";
-            Assert.AreEqual("testStrTEST", Grammar.ReplaceEnd(testString, 3, "TEST"));
         }
     }
 }

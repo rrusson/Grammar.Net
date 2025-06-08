@@ -28,7 +28,7 @@ namespace GrammarExtensionsTests
                 "unanimous",
                 "unicorn",
                 "unilateral",
-                "urinologist",
+                "urologist",
                 "urea",
                 "useful",
                 "user"
