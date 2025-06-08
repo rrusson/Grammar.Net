@@ -4,7 +4,7 @@ using GrammarExtensions;
 namespace GrammarExtensionsTests
 {
     [TestClass]
-    public class ToPluralTests
+    public class PluralizerTests
     {
         public void Leave_it_to_the_professionals_test()
         {
