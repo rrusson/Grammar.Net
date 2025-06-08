@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Immutable;
 
 namespace GrammarExtensions
 {
@@ -11,6 +8,30 @@ namespace GrammarExtensions
 		// https://learn.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?view=netframework-4.8.1
 		// And the Humanizer library has these methods and much more: https://github.com/Humanizr/Humanizer
 
+		private static readonly string[] _samePluralEndings = { 
+			"bison", "craft", "deer", "faux pas", "fish", "itis", "moose", "offspring", "ois", 
+			"pants", "pos", "salmon", "scissors", "series", "sheep", "shrimp", "species", "swine", "trout", "tuna", "tweezers"
+		};
+
+		private static readonly ImmutableDictionary<string, string> _specialCases =
+			new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+			{
+				{ "child", "children" },
+				{ "corpus", "corpora" },
+				{ "die", "dice" },
+				{ "foot", "feet" },
+				{ "genus", "genera" },
+				{ "goose", "geese" },
+				{ "louse", "lice" },
+				{ "man", "men" },
+				{ "mouse", "mice" },
+				{ "opus", "opera" },
+				{ "ox", "oxen" },
+				{ "quiz", "quizzes" },
+				{ "tooth", "teeth" },
+				{ "woman", "women" },
+			}.ToImmutableDictionary();
+
 		public static string ToPlural(this string noun)
 		{
 			if (string.IsNullOrWhiteSpace(noun))
@@ -18,90 +39,117 @@ namespace GrammarExtensions
 				return string.Empty;
 			}
 
-			string[] alreadyPluralEndings = { "deer", "fish", "itis", "ois", "pos", "sheep" };
-			if (alreadyPluralEndings.Any(w => noun.EndsWith(w)))
+			if (_samePluralEndings.Any(w => noun.EndsWith(w)))
 			{
 				return noun;
 			}
 
-			string latin = TryLatinateEndings(noun);
-			if (latin != null)
+			string? specialCase = TrySpecialCases(noun);
+			if (specialCase != null)
 			{
-				return latin;
+				return specialCase;
+			}
+
+			string? foreignWord = TryForeignLanguageEndings(noun);
+			if (foreignWord != null)
+			{
+				return foreignWord;
 			}
 
 			char lastLetter = noun.Reverse().Take(1).ToArray()[0];
 
-			//Vowel endings
+			// Vowel endings
 			if (lastLetter == 'y')
 			{
-				return ReplaceEnd(noun, 1, "ies");
+				return ReplaceEnding(noun, 1, "ies");
 			}
 
-			//If the noun ends with -ch, -s, -sh, -x, or -z, add "es"
+			// If the noun ends with -ch, -s, -sh, -x, or -z, add "es"
 			if (lastLetter == 'o' || lastLetter == 's' || lastLetter == 'x' || lastLetter == 'z'
 				|| noun.EndsWith("ch") || noun.EndsWith("sh"))
 			{
 				return noun + "es";
 			}
 
-			//If the noun ends with -f or -fe, change to "ves" (e.g. knife --> knives)
+			// If the noun ends with -f or -fe, change to "ves" (e.g. knife --> knives)
 			if (lastLetter == 'f')
 			{
-				return ReplaceEnd(noun, 1, "ves");
+				return ReplaceEnding(noun, 1, "ves");
 			}
 			if (noun.EndsWith("fe"))
 			{
-				return ReplaceEnd(noun, 2, "ves");
-			}
-
-			//Greek words
-			if (noun.EndsWith("sis"))   // e.g. hypothesis --> hypotheses
-			{
-				return ReplaceEnd(noun, 2, "es");
-			}
-
-			if (noun.EndsWith("ion") || noun.EndsWith("non"))   // e.g. criterion --> Criteria
-			{
-				return ReplaceEnd(noun, 2, "a");
+				return ReplaceEnding(noun, 2, "ves");
 			}
 
 			return noun + "s";
 		}
 
-		public static string ToSingular(this string noun)
+		private static string ReplaceEnding(string input, int numberOfChars, string ending)
 		{
-			//  Singularizing RegEx:        /(?<![aei])([ie][d])(?=[^a-zA-Z])|(?<=[ertkgwmnl])s(?=[^a-zA-Z])/g
-			throw new NotImplementedException("This is nowhere near complete");
-
-			return ReplaceEnd(noun, 1, "");
+			return input != null
+				? string.Concat(input.AsSpan(0, input.Length - numberOfChars), ending)
+				: string.Empty;
 		}
 
-		private static string ReplaceEnd(string input, int numberOfChars, string ending)
+		private static string? TryForeignLanguageEndings(string noun)
 		{
-			return input.Substring(0, input.Length - numberOfChars) + ending;
-		}
-
-
-		private static string TryLatinateEndings(string noun)
-		{
+			// Start with Latin words
 			if (noun.EndsWith("ex") || noun.EndsWith("ix"))
 			{
-				return ReplaceEnd(noun, 2, "ices");
+				return ReplaceEnding(noun, 2, "ices");
 			}
 
 			if (noun.EndsWith("um"))    //e.g. memorandum --> memoranda
 			{
-				return ReplaceEnd(noun, 2, "a");
+				return ReplaceEnding(noun, 2, "a");
 			}
+
 			if (noun.EndsWith("us"))    //e.g. radius --> radii
 			{
-				return ReplaceEnd(noun, 2, "i");
+				return ReplaceEnding(noun, 2, "i");
 			}
 
 			if (noun.EndsWith("a"))
 			{
 				return noun + "e";
+			}
+
+			// Greek words
+			if (noun.EndsWith("is"))   //e.g. hypothesis --> hypotheses
+			{
+				return ReplaceEnding(noun, 2, "es");
+			}
+
+			if (noun.EndsWith("ion") || noun.EndsWith("non"))   // e.g. criterion --> Criteria
+			{
+				return ReplaceEnding(noun, 2, "a");
+			}
+
+			// French words
+			if (noun.EndsWith("eau") || noun.EndsWith("eu") || noun.EndsWith("ou"))
+			{
+				return noun + "x"; // e.g. tableau --> tableaux
+			}
+
+			// Italian words
+			if (noun.EndsWith("tto")) // e.g. virtuoso --> virtuosos
+			{
+				return noun + "s"; // Let's use the English pluralization for these instead of proper Italian pluralization
+			}
+
+			return null;
+		}
+
+		private static string? TrySpecialCases(this string noun)
+		{
+			if (string.IsNullOrEmpty(noun))
+			{
+				return null;
+			}
+
+			if (_specialCases.TryGetValue(noun, out var pluralForm))
+			{
+				return pluralForm;
 			}
 
 			return null;
