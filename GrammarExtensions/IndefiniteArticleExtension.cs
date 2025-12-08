@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace GrammarExtensions
@@ -21,14 +19,14 @@ namespace GrammarExtensions
 
             //Acronyms starting with a vowel sound (with or without periods between letters)
             if (noun.Length > 1 && (noun[1] == '.' || noun == noun.ToUpper())
-                && "AEFHILMNORSX".Contains(noun[0].ToString().ToUpper()))
+                && "AEFHILMNORSX".Contains(noun[0].ToString(), StringComparison.CurrentCultureIgnoreCase))
             {
                 return "an";
             }
 
             //Acronyms starting with a U sound (with or without periods between letters)
             if (noun.Length > 1 && (noun[1] == '.' || noun == noun.ToUpper())
-                && noun[0].ToString().ToUpper() == "U")
+                && noun[0].ToString().Equals("U", StringComparison.CurrentCultureIgnoreCase))
             {
                 return "a";
             }
@@ -46,16 +44,16 @@ namespace GrammarExtensions
             //Special cases where a word that begins with a vowel should be preceded by "a"
             string[] exceptions = { "^e[uw]", "^onc?e\\b", "^u[bcfhjkqrst][aeiou]", "^unani", "uni(l[^l]|[a-ko-z])", "^ouija" };
 
-            if (exceptions.Any(regEx => Regex.IsMatch(noun, regEx)))
+            if (exceptions.Any(regEx => Regex.IsMatch(noun, regEx, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100))))
             {
 				return "a";
             }
 
-            bool startsWithVowel = noun.StartsWith("a", true, CultureInfo.InvariantCulture)
-                || noun.StartsWith("e", true, CultureInfo.InvariantCulture)
-                || noun.StartsWith("i", true, CultureInfo.InvariantCulture)
-                || noun.StartsWith("o", true, CultureInfo.InvariantCulture)
-                || noun.StartsWith("u", true, CultureInfo.InvariantCulture);
+            bool startsWithVowel = noun.StartsWith('a')
+                || noun.StartsWith('e')
+                || noun.StartsWith('i')
+                || noun.StartsWith('o')
+                || noun.StartsWith('u');
 
             return startsWithVowel
                 ? "an"

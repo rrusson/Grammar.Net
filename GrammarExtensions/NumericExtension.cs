@@ -8,23 +8,23 @@ namespace GrammarExtensions
 	/// well as special cases such as zero.</remarks>
 	public static class NumericExtension
 	{
-		private static readonly string[] CardinalOnes = {
+		private static readonly string[] CardinalOnes = [
 			"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", 
 			"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
-		};
+		];
 
-		private static readonly string[] CardinalTens = {
+		private static readonly string[] CardinalTens = [
 			"zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
-		};
+		];
 
-		private static readonly string[] OrdinalOnes = {
+		private static readonly string[] OrdinalOnes = [
 			"zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", 
 			"tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth"
-		};
+		];
 
-		private static readonly string[] OrdinalTens = {
+		private static readonly string[] OrdinalTens = [
 			"zeroth", "tenth", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth", "seventieth", "eightieth", "ninetieth"
-		};
+		];
 
 		/// <summary>
 		/// Returns the ordinal representation for any positive number
@@ -47,13 +47,13 @@ namespace GrammarExtensions
 			}
 
 			// Determine suffix based on the last digit
-			switch (number % 10)
+			return (number % 10) switch
 			{
-				case 1: return $"{number}st";
-				case 2: return $"{number}nd";
-				case 3: return $"{number}rd";
-				default: return $"{number}th";
-			}
+				1 => $"{number}st",
+				2 => $"{number}nd",
+				3 => $"{number}rd",
+				_ => $"{number}th",
+			};
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace GrammarExtensions
 					parts.Add(CardinalTens[tens]);
 					if (units > 0)
 					{
-						parts[parts.Count - 1] += $"-{CardinalOnes[units]}";
+						parts[^1] += $"-{CardinalOnes[units]}";
 					}
 				}
 			}

@@ -8,10 +8,10 @@ namespace GrammarExtensions
 		// https://learn.microsoft.com/en-us/dotnet/api/system.data.entity.design.pluralizationservices.pluralizationservice?view=netframework-4.8.1
 		// And the Humanizer library has these methods and much more: https://github.com/Humanizr/Humanizer
 
-		private static readonly string[] _samePluralEndings = { 
+		private static readonly string[] _samePluralEndings = [
 			"bison", "craft", "deer", "faux pas", "fish", "itis", "moose", "offspring", "ois", "pants",
 			"salmon", "scissors", "series", "sheep", "shrimp", "species", "swine", "trout", "tuna", "tweezers"
-		};
+		];
 
 		private static readonly ImmutableDictionary<string, string> _specialCases =
 			new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

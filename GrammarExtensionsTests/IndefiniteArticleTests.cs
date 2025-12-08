@@ -86,16 +86,18 @@ namespace GrammarExtensionsTests
 			Assert.AreEqual("an", "FAA".IndefiniteArticle(), "Wrong IndefiniteArticle for 'FAA'");
 		}
 
-		[TestMethod]
+		[TestMethod("IndefiniteArticle returns empty string when the string is null or empty")]
 		public void IndefiniteArticle_emptyTest()
 		{
 			// Arrange
 			string? nothing = null;
 
-			// Act and Assert
-			Assert.AreEqual("", nothing.IndefiniteArticle(), "Wrong IndefiniteArticle for null string");
-			Assert.AreEqual("", "".IndefiniteArticle(), "Wrong IndefiniteArticle for empty string");
-			Assert.AreEqual("", "       ".IndefiniteArticle(), "Wrong IndefiniteArticle for whitespace string");
+            // Act and Assert
+#pragma warning disable CS8604 // Possible null reference argument. Not just possible, but deliberate in this test.
+            Assert.AreEqual(string.Empty, nothing.IndefiniteArticle(), "Wrong IndefiniteArticle for null string");
+#pragma warning restore CS8604
+			Assert.AreEqual(string.Empty, "".IndefiniteArticle(), "Wrong IndefiniteArticle for empty string");
+			Assert.AreEqual(string.Empty, "       ".IndefiniteArticle(), "Wrong IndefiniteArticle for whitespace string");
 		}
 	}
 }
