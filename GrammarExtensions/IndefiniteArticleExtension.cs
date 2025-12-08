@@ -7,12 +7,12 @@ namespace GrammarExtensions
 {
     public static class IndefiniteArticleExtension
     {
-		/// <summary>
-		/// Returns "a" or "an" based on grammatical rules
-		/// </summary>
-		/// <param name="noun">object of the article</param>
-		/// <returns>"a" or "an"-- empty if input was empty</returns>
-		public static string IndefiniteArticle(this string noun)
+        /// <summary>
+        /// Returns "a" or "an" based on grammatical rules
+        /// </summary>
+        /// <param name="noun">object of the article</param>
+        /// <returns>"a" or "an"-- empty if input was empty</returns>
+        public static string IndefiniteArticle(this string noun)
         {
             if (string.IsNullOrWhiteSpace(noun))
             {
@@ -46,9 +46,9 @@ namespace GrammarExtensions
             //Special cases where a word that begins with a vowel should be preceded by "a"
             string[] exceptions = { "^e[uw]", "^onc?e\\b", "^u[bcfhjkqrst][aeiou]", "^unani", "uni(l[^l]|[a-ko-z])", "^ouija" };
 
-            foreach (var regEx in exceptions)
+            if (exceptions.Any(regEx => Regex.IsMatch(noun, regEx)))
             {
-                if (Regex.IsMatch(noun, regEx)) return "a";
+				return "a";
             }
 
             bool startsWithVowel = noun.StartsWith("a", true, CultureInfo.InvariantCulture)

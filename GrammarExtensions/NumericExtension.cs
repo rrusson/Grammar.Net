@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace GrammarExtensions
 {
 	/// <summary>
@@ -155,7 +153,6 @@ namespace GrammarExtensions
 				number %= 1000;
 				if (number == 0)
 				{
-					//return $"{string.Join(" ", parts)} {thousands.ToWordsOrdinal()} thousand".Trim();
 					return $"{string.Join(" ", parts)} {thousands.ToWords()} thousandth".Trim();
 				}
 

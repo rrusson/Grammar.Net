@@ -109,7 +109,7 @@ namespace GrammarExtensions
 				return ReplaceEnding(noun, 2, "i");
 			}
 
-			if (noun.EndsWith("a"))
+			if (noun.EndsWith('a'))
 			{
 				return noun + "e";
 			}
